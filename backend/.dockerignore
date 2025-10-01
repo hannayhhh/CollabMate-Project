@@ -1,0 +1,32 @@
+# Dependencies and caching
+node_modules
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+
+# Documents
+.git
+.gitignore
+README.md
+*.md
+
+# Run and build products
+coverage
+dist
+build
+*.log
+
+# Test code
+tests
+__tests__/
+jest.config.js
+.nyc_output
+
+# Container files
+Dockerfile
+docker-compose.yml
+docker-compose.*.yml
+
+# environment files
+.env
+.env.* 

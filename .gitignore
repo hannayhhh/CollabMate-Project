@@ -1,0 +1,27 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
+.env
+.env.local
+
+# Build / temp output
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# OS-specific
+*.swp
+
+# Docker
+*.pid

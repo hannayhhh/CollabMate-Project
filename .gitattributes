@@ -1,0 +1,15 @@
+# Force all text files to use LF (Unix-style) line endings in the repo
+* text=auto eol=lf
+
+# Treat JavaScript, TypeScript, JSON, etc. as text
+*.js  text eol=lf
+*.ts  text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md  text eol=lf
+
+# Prevent git from messing with images and binaries
+*.png binary
+*.jpg binary
+*.svg binary
