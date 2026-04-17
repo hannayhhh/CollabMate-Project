@@ -115,10 +115,14 @@ function Register() {
       },
       body: JSON.stringify(body)
     });
-    const result = await response.json();
-    if (result.error) {
-      console.log("error")
-      setMessage("Error! Please check all fields and try again!");
+    const contentType = response.headers.get('content-type') || '';
+    const result = contentType.includes('application/json')
+      ? await response.json()
+      : { error: await response.text() };
+
+    if (!response.ok || result.error) {
+      console.error('Registration failed:', result.error);
+      setMessage(result.error || "Error! Please check all fields and try again!");
       setSnackSeverity('error'); 
       setSnackOpen(true);
     }else{
