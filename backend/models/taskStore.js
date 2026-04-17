@@ -5,8 +5,8 @@
  * @date 2025-06-29
  */
 
-const fs = require("fs");
 const path = require("path");
+const { loadJsonArray, saveJsonArray } = require("./jsonFileStore");
 
 const TASKS_FILE_PATH = path.join(__dirname, "../data/tasks.json");
 
@@ -15,9 +15,7 @@ const TASKS_FILE_PATH = path.join(__dirname, "../data/tasks.json");
  * @returns {Array<Object>} Array of task objects
  */
 const loadTasks = () => {
-  if (!fs.existsSync(TASKS_FILE_PATH)) return [];
-  const data = fs.readFileSync(TASKS_FILE_PATH, "utf-8");
-  return JSON.parse(data || "[]");
+  return loadJsonArray(TASKS_FILE_PATH);
 };
 
 /**
@@ -25,7 +23,7 @@ const loadTasks = () => {
  * @param {Array<Object>} tasks
  */
 const saveTasks = (tasks) => {
-  fs.writeFileSync(TASKS_FILE_PATH, JSON.stringify(tasks, null, 2));
+  saveJsonArray(TASKS_FILE_PATH, tasks);
 };
 
 /**

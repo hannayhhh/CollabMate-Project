@@ -6,8 +6,8 @@
  * @update 2025-07-19
  */
 
-const fs = require("fs");
 const path = require("path");
+const { loadJsonArray, saveJsonArray } = require("./jsonFileStore");
 
 const TEAMS_FILE_PATH = path.join(__dirname, "../data/teams.json");
 
@@ -16,9 +16,7 @@ const TEAMS_FILE_PATH = path.join(__dirname, "../data/teams.json");
  * @returns {Array<Object>} Array of team objects
  */
 const loadTeams = () => {
-  if (!fs.existsSync(TEAMS_FILE_PATH)) return [];
-  const data = fs.readFileSync(TEAMS_FILE_PATH, "utf-8");
-  return JSON.parse(data || "[]");
+  return loadJsonArray(TEAMS_FILE_PATH);
 };
 
 /**
@@ -26,7 +24,7 @@ const loadTeams = () => {
  * @param {Array<Object>} teams
  */
 const saveTeams = (teams) => {
-  fs.writeFileSync(TEAMS_FILE_PATH, JSON.stringify(teams, null, 2));
+  saveJsonArray(TEAMS_FILE_PATH, teams);
 };
 
 /**

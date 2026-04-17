@@ -54,46 +54,51 @@ const validatePasswordStrength = (password) => {
  * @returns {Promise<void>}
  */
 const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  try {
+    const { username, email, password } = req.body;
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: "Missing fields" });
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
+
+    if (!validateEmailFormat(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    if (!validatePasswordStrength(password)) {
+      return res.status(400).json({
+        error:
+          "Password must be at least 8 characters long, include letters and numbers, and only use a-z, A-Z, 0-9, _ - + @",
+      });
+    }
+
+    if (userExists(email)) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+    const users = loadUsers();
+    const userId = uuidv4();
+    const tokenVersion = 0;
+    users.push({ userId, username, email, password: hash, tokenVersion });
+    saveUsers(users);
+
+    const token = jwt.sign(
+      {
+        userId: userId,
+        email: email,
+        username: username,
+        tokenVersion: tokenVersion,
+      },
+      process.env.JWT_SECRET || "demo-secret-key",
+      { expiresIn: "7d" }
+    );
+
+    res.status(201).json({ message: "User registered", token: token });
+  } catch (error) {
+    console.error("Register failed:", error);
+    res.status(500).json({ error: "Registration failed on server" });
   }
-
-  if (!validateEmailFormat(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
-  }
-
-  if (!validatePasswordStrength(password)) {
-    return res.status(400).json({
-      error:
-        "Password must be at least 8 characters long, include letters and numbers, and only use a-z, A-Z, 0-9, _ - + @",
-    });
-  }
-
-  if (userExists(email)) {
-    return res.status(400).json({ error: "Email already exists" });
-  }
-
-  const hash = await bcrypt.hash(password, 10);
-  const users = loadUsers();
-  const userId = uuidv4();
-  const tokenVersion = 0;
-  users.push({ userId, username, email, password: hash, tokenVersion });
-  saveUsers(users);
-
-  const token = jwt.sign(
-    {
-      userId: userId,
-      email: email,
-      username: username,
-      tokenVersion: tokenVersion,
-    },
-    process.env.JWT_SECRET || "demo-secret-key",
-    { expiresIn: "7d" }
-  );
-
-  res.status(201).json({ message: "User registered", token: token });
 };
 
 /**

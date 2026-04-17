@@ -7,8 +7,8 @@
  * @update 2025-07-19
  */
 
-const fs = require("fs");
 const path = require("path");
+const { loadJsonArray, saveJsonArray } = require("./jsonFileStore");
 
 const USERS_FILE_PATH = path.join(__dirname, "../data/users.json");
 
@@ -17,9 +17,7 @@ const USERS_FILE_PATH = path.join(__dirname, "../data/users.json");
  * @returns {Array<Object>} Array of user objects
  */
 const loadUsers = () => {
-  if (!fs.existsSync(USERS_FILE_PATH)) return [];
-  const data = fs.readFileSync(USERS_FILE_PATH, "utf-8");
-  return JSON.parse(data || "[]");
+  return loadJsonArray(USERS_FILE_PATH);
 };
 
 /**
@@ -27,7 +25,7 @@ const loadUsers = () => {
  * @param {Array<Object>} users - Array of user objects to write
  */
 const saveUsers = (users) => {
-  fs.writeFileSync(USERS_FILE_PATH, JSON.stringify(users, null, 2));
+  saveJsonArray(USERS_FILE_PATH, users);
 };
 
 /***************** Login ********************/
