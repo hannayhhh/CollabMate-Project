@@ -13,14 +13,21 @@ const cors = require("cors");
 
 const app = express();
 
-// Enable CORS for frontend dev environment
+// Enable CORS for configured frontend origins.
+const normalizeOrigin = (origin) => origin.replace(/\/$/, "");
 const allowedOrigins = (process.env.CORS_ORIGIN || "")
   .split(",")
-  .map((s) => s.trim());
+  .map((s) => normalizeOrigin(s.trim()))
+  .filter(Boolean);
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
